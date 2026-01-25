@@ -12,17 +12,19 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return Project.objects.filter(owner=self.request.user)
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Task.objects.filter(project__owner=self.request.user)
-    
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context["project"] = Project.objects.get(
-            id=self.kwargs["project_id"],
+        return Task.objects.filter(
+            project_id=self.kwargs['project_id'],
+            project__owner=self.request.user
+        )
+
+    def perform_create(self, serializer):
+        project = Project.objects.get(
+            id=self.kwargs['project_id'],
             owner=self.request.user
         )
-        return context
+        serializer.save(project=project)
+    

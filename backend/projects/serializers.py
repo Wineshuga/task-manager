@@ -4,15 +4,9 @@ from .models import Project, Task
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ["id", "title", "completed", "due_date"]
-
-    def create(self, validated_data):
-        project = self.context["project"]
-        return Task.objects.create(
-            project=project,
-            **validated_data
-        )
-
+        fields = ['id', 'title', 'status', 'created_at']
+        read_only_fields = ['id', 'created_at']
+        
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project

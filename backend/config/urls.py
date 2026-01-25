@@ -7,7 +7,6 @@ from users.views import RegisterView, MeView
 
 router = DefaultRouter()
 router.register(r'projects', ProjectViewSet)
-router.register(r'tasks', TaskViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,9 +15,20 @@ urlpatterns = [
     path('api/auth/refresh/', TokenRefreshView.as_view()),
     path('api/auth/me/', MeView.as_view()),
     path(
-        'api/projects/<int:project_id>/tasks/',
-        TaskViewSet.as_view({'get': 'list', 'post': 'create'}),
-        name='project-tasks'
+        'api/projects/<uuid:project_id>/tasks/',
+        TaskViewSet.as_view({
+            'get': 'list',
+            'post': 'create'
+        }),
+    ),
+    path(
+        'api/projects/<uuid:project_id>/tasks/<uuid:pk>/',
+        TaskViewSet.as_view({
+            'patch': 'partial_update',
+            'put': 'update',
+            'delete': 'destroy',
+            'get': 'retrieve'
+        }),
     ),
     path('api/', include(router.urls)),
 ]
