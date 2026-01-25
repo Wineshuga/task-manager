@@ -29,3 +29,5 @@ db.sqlite3
 .DS_Store
 .Trashes
 Thumbs.db
+
+.env
