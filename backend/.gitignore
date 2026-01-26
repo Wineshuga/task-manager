@@ -1,0 +1,33 @@
+# Python
+*.pyc
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.venv/
+env/
+venv/
+ENV/
+bin/
+lib/
+include/
+share/
+
+# Django
+*.log
+*.pot
+local_settings.py
+db.sqlite3
+/media
+/static
+
+# IDEs and other tools
+.idea/
+.vscode/
+.history/
+
+# OS-generated files
+.DS_Store
+.Trashes
+Thumbs.db
+
+.env
