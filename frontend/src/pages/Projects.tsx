@@ -1,11 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import CreateProjectModal from "../components/CreateProjectModal";
-import { signOut } from "../thunk";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { createProject, fetchProjects, signOut } from "../thunk";
 
 interface Project {
   id: string;
@@ -27,15 +24,11 @@ const Projects = () => {
   const user = storedUser ? JSON.parse(storedUser) : null;
   const token = user.accessToken;
 
-  const fetchProjects = async () => {
+  const loadProjects = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/api/projects/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setProjects(res.data);
+      const data = await fetchProjects(token);
+      setProjects(data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -44,27 +37,19 @@ const Projects = () => {
   };
 
   useEffect(() => {
-    fetchProjects();
+    loadProjects();
   }, []);
 
-  const createProject = async () => {
+  const handleCreateProject = async () => {
     setBtnLoading(true);
-    const payload = {
-      title: inputValue.title,
-      description: inputValue.description,
-    };
     try {
-      await axios.post(`${API_URL}/api/projects/`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await createProject(inputValue, token);
       toast.success("New project created!");
-      fetchProjects();
+      loadProjects();
       setShowCreateProject(false);
     } catch (error) {
       console.error(error);
-      toast.error("something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setBtnLoading(false);
     }
@@ -121,7 +106,7 @@ const Projects = () => {
           setShowCreateProject={setShowCreateProject}
           inputValue={inputValue}
           setInputValue={setInputValue}
-          createProject={createProject}
+          createProject={handleCreateProject}
           btnLoading={btnLoading}
         />
       )}
