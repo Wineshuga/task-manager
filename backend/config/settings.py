@@ -46,7 +46,6 @@ INSTALLED_APPS += ['rest_framework', 'rest_framework_simplejwt', 'users', 'proje
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -128,6 +127,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://task-manager-azure-xi.vercel.app",
 ]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+USE_X_FORWARDED_HOST = True
 
 CORS_ALLOW_CREDENTIALS = True
 
