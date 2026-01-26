@@ -1,8 +1,9 @@
 import { toast } from "react-toastify";
-import Modal from "../components/Modal";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import CreateTaskModal from "../components/CreateTaskModal";
+import UpdateTaskModal from "../components/UpdateTaskModal";
 
 interface Task {
   id: string;
@@ -102,6 +103,7 @@ const ProjectDetails = () => {
       );
       toast.success("Task updated!");
       setShowUpdateTask(false);
+      fetchTasks();
       setInputValue({ ...inputValue, status: "" });
     } catch (error) {
       console.error(error);
@@ -157,100 +159,24 @@ const ProjectDetails = () => {
         </ul>
       )}
       {showCreateTask && (
-        <Modal
-          isOpen={showCreateTask}
-          title={"Add Task"}
-          onClose={() => setShowCreateTask(false)}
-        >
-          <form>
-            <div>
-              <label htmlFor="title">Title:</label>
-              <input
-                className="border p-2 text-sm w-full my-2"
-                type="text"
-                value={inputValue.title}
-                onChange={(e) =>
-                  setInputValue({ ...inputValue, title: e.target.value })
-                }
-                name="title"
-                placeholder="Enter task title"
-              />
-            </div>
-            <div>
-              <label htmlFor="status">Status:</label>
-              <select
-                name="status"
-                id="status"
-                className="border p-2 text-sm w-full my-2"
-                value={inputValue.status}
-                onChange={(e) =>
-                  setInputValue({ ...inputValue, status: e.target.value })
-                }
-              >
-                <option value="">select</option>
-                <option value="todo">To Do</option>
-                <option value="in_progress">In Progress</option>
-                <option value="done">Done</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="due_date">Due Date</label>
-              <input
-                className="border p-2 text-sm w-full my-2"
-                type="date"
-                value={inputValue.due_date}
-                onChange={(e) =>
-                  setInputValue({ ...inputValue, due_date: e.target.value })
-                }
-                name="due_date"
-                placeholder="Enter due date"
-              />
-            </div>
-            <button
-              type="button"
-              className="bg-amber-700 p-2 w-40 text-white text-sm cursor-pointer"
-              onClick={createTask}
-              disabled={btnLoading}
-            >
-              Add
-            </button>
-          </form>
-        </Modal>
+        <CreateTaskModal
+          showCreateTask={showCreateTask}
+          setShowCreateTask={setShowCreateTask}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          createTask={createTask}
+          btnLoading={btnLoading}
+        />
       )}
       {showUpdateTask && (
-        <Modal
-          isOpen={showUpdateTask}
-          title={"Update Task Status"}
-          onClose={() => setShowUpdateTask(false)}
-        >
-          <form>
-            <div>
-              <label htmlFor="status">Status:</label>
-              <select
-                name="status"
-                id="status"
-                className="border p-2 text-sm w-full my-2"
-                value={inputValue.status}
-                onChange={(e) =>
-                  setInputValue({ ...inputValue, status: e.target.value })
-                }
-              >
-                <option value="">select</option>
-                <option value="todo">To Do</option>
-                <option value="in_progress">In Progress</option>
-                <option value="done">Done</option>
-              </select>
-            </div>
-            <button
-              type="button"
-              className="bg-amber-700 p-2 w-40 text-white text-sm cursor-pointer"
-              onClick={updateTask}
-              disabled={btnLoading}
-            >
-              Add
-            </button>
-          </form>
-        </Modal>
+        <UpdateTaskModal
+          showUpdateTask={showUpdateTask}
+          setShowUpdateTask={setShowUpdateTask}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          updateTask={updateTask}
+          btnLoading={btnLoading}
+        />
       )}
     </section>
   );

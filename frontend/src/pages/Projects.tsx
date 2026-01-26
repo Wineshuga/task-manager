@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Modal from "../components/Modal";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import CreateProjectModal from "../components/CreateProjectModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -108,48 +108,14 @@ const Projects = () => {
         </ul>
       )}
       {showCreateProject && (
-        <Modal
-          isOpen={showCreateProject}
-          title={"Create New Project"}
-          onClose={() => setShowCreateProject(false)}
-        >
-          <form>
-            <div>
-              <label htmlFor="title">Title:</label>
-              <input
-                className="border p-2 text-sm w-full my-2"
-                type="text"
-                value={inputValue.title}
-                onChange={(e) =>
-                  setInputValue({ ...inputValue, title: e.target.value })
-                }
-                name="title"
-                placeholder="Enter project title"
-              />
-            </div>
-            <div>
-              <label htmlFor="description">Description:</label>
-              <input
-                className="border p-2 text-sm w-full my-2"
-                type="text"
-                value={inputValue.description}
-                onChange={(e) =>
-                  setInputValue({ ...inputValue, description: e.target.value })
-                }
-                name="description"
-                placeholder="Enter description"
-              />
-            </div>
-            <button
-              type="button"
-              className="bg-amber-700 p-2 w-40 text-white text-sm cursor-pointer"
-              onClick={createProject}
-              disabled={btnLoading}
-            >
-              Create
-            </button>
-          </form>
-        </Modal>
+        <CreateProjectModal
+          showCreateProject={showCreateProject}
+          setShowCreateProject={setShowCreateProject}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          createProject={createProject}
+          btnLoading={btnLoading}
+        />
       )}
     </section>
   );
