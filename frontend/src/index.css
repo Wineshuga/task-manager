@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+* {
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
