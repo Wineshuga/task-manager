@@ -18,6 +18,8 @@ const ProjectDetails = () => {
   const [btnLoading, setBtnLoading] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showCreateTask, setShowCreateTask] = useState(false);
+  const [showUpdateTask, setShowUpdateTask] = useState(false);
+  const [taskId, setTaskId] = useState("");
   const [inputValue, setInputValue] = useState({
     title: "",
     status: "",
@@ -87,6 +89,26 @@ const ProjectDetails = () => {
     }
   };
 
+  const updateTask = async () => {
+    try {
+      await axios.patch(
+        `${API_URL}/api/projects/${project.id}/tasks/${taskId}/`,
+        { status: inputValue.status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      toast.success("Task updated!");
+      setShowUpdateTask(false);
+      setInputValue({ ...inputValue, status: "" });
+    } catch (error) {
+      console.error(error);
+      toast.error("couldn't update");
+    }
+  };
+
   return (
     <section className="lg:w-1/2 mx-auto md:p-10 p-5 shadow-md">
       <h1 className="sm:text-2xl text-xl font-bold">{project.title}</h1>
@@ -107,8 +129,11 @@ const ProjectDetails = () => {
             <li className="text-center">You have no tasks</li>
           ) : (
             tasks.map((task, index) => (
-              <li key={index} className="my-2">
-                <div className="shadow-md p-3">
+              <li
+                key={index}
+                className="my-2 shadow-md p-3 flex justify-between items-center"
+              >
+                <div>
                   <span>{index + 1}</span>
                   <h3 className=" font-semibold">{task.title}</h3>
                   <p className="text-sm">Status: {task.status}</p>
@@ -116,6 +141,16 @@ const ProjectDetails = () => {
                     Due Date: {new Date(task.due_date).toDateString()}
                   </p>
                 </div>
+                <button
+                  type="button"
+                  className="bg-amber-700 my-2 p-2 text-white text-sm cursor-pointer"
+                  onClick={() => {
+                    setShowUpdateTask(true);
+                    setTaskId(task.id);
+                  }}
+                >
+                  Update Status
+                </button>
               </li>
             ))
           )}
@@ -125,7 +160,7 @@ const ProjectDetails = () => {
         <Modal
           isOpen={showCreateTask}
           title={"Add Task"}
-          onClose={() => setShowCreateTask}
+          onClose={() => setShowCreateTask(false)}
         >
           <form>
             <div>
@@ -175,6 +210,41 @@ const ProjectDetails = () => {
               type="button"
               className="bg-amber-700 p-2 w-40 text-white text-sm cursor-pointer"
               onClick={createTask}
+              disabled={btnLoading}
+            >
+              Add
+            </button>
+          </form>
+        </Modal>
+      )}
+      {showUpdateTask && (
+        <Modal
+          isOpen={showUpdateTask}
+          title={"Update Task Status"}
+          onClose={() => setShowUpdateTask(false)}
+        >
+          <form>
+            <div>
+              <label htmlFor="status">Status:</label>
+              <select
+                name="status"
+                id="status"
+                className="border p-2 text-sm w-full my-2"
+                value={inputValue.status}
+                onChange={(e) =>
+                  setInputValue({ ...inputValue, status: e.target.value })
+                }
+              >
+                <option value="">select</option>
+                <option value="todo">To Do</option>
+                <option value="in_progress">In Progress</option>
+                <option value="done">Done</option>
+              </select>
+            </div>
+            <button
+              type="button"
+              className="bg-amber-700 p-2 w-40 text-white text-sm cursor-pointer"
+              onClick={updateTask}
               disabled={btnLoading}
             >
               Add

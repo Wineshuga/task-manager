@@ -111,7 +111,7 @@ const Projects = () => {
         <Modal
           isOpen={showCreateProject}
           title={"Create New Project"}
-          onClose={() => setShowCreateProject}
+          onClose={() => setShowCreateProject(false)}
         >
           <form>
             <div>
