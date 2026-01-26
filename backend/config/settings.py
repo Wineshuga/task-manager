@@ -126,6 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://task-manager-azure-xi.vercel.app",
+    "https://dww7f9l5ronpp.cloudfront.net",
 ]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
