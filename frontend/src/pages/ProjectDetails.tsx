@@ -4,6 +4,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import CreateTaskModal from "../components/CreateTaskModal";
 import UpdateTaskModal from "../components/UpdateTaskModal";
+import { signOut } from "../thunk";
 
 interface Task {
   id: string;
@@ -113,6 +114,14 @@ const ProjectDetails = () => {
 
   return (
     <section className="lg:w-1/2 mx-auto md:p-10 p-5 shadow-md">
+      <button
+        type="button"
+        className="border border-amber-700 p-2 sm:w-40 text-sm cursor-pointer"
+        onClick={signOut}
+      >
+        Sign Out
+      </button>
+
       <h1 className="sm:text-2xl text-xl font-bold">{project.title}</h1>
       <p className="text-sm">{project.description}</p>
       <button

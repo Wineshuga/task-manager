@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import CreateProjectModal from "../components/CreateProjectModal";
+import { signOut } from "../thunk";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -71,6 +72,13 @@ const Projects = () => {
 
   return (
     <section className="lg:w-1/2 mx-auto md:p-10 p-5 shadow-md">
+      <button
+        type="button"
+        className="border border-amber-700 p-2 sm:w-40 text-sm cursor-pointer"
+        onClick={signOut}
+      >
+        Sign Out
+      </button>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">My Projects</h1>
         <button
