@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from .models import Project, Task
 from .serializers import ProjectSerializer, TaskSerializer
 from rest_framework.permissions import IsAuthenticated
+from telemetry import task_counter
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
@@ -27,4 +28,4 @@ class TaskViewSet(viewsets.ModelViewSet):
             owner=self.request.user
         )
         serializer.save(project=project)
-    
+        task_counter.add(1)
