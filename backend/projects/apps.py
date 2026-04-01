@@ -1,3 +1,4 @@
+import uuid
 from django.apps import AppConfig
 import os
 
@@ -8,13 +9,18 @@ class ProjectsConfig(AppConfig):
         if os.environ.get('RUN_MAIN') != 'true':
             return
         from opentelemetry import metrics
+        from opentelemetry.sdk.resources import Resource
         from opentelemetry.sdk.metrics import MeterProvider
-        from opentelemetry.exporter.prometheus import PrometheusMetricReader
-        from opentelemetry.sdk.resources import SERVICE_NAME, Resource
-        from prometheus_client import start_http_server
+        from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
+        from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
 
-        resource = Resource.create(attributes={SERVICE_NAME: "task-manager"})
-        start_http_server(port=9464)
-        reader = PrometheusMetricReader()
-        provider = MeterProvider(resource=resource, metric_readers=[reader])
+        resource = Resource.create({
+            "service.instance.id": str(uuid.uuid4())
+        })
+
+        exporter = OTLPMetricExporter()
+        reader = PeriodicExportingMetricReader(exporter)
+
+        provider = MeterProvider(metric_readers=[reader], resource=resource)
+
         metrics.set_meter_provider(provider)
