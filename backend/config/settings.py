@@ -41,10 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-INSTALLED_APPS += ['rest_framework', 'rest_framework_simplejwt', 'users', 'projects', "corsheaders",]
+INSTALLED_APPS += ['rest_framework', 'rest_framework_simplejwt', 'users', 'projects.apps.ProjectsConfig', "corsheaders",]
 
 
 MIDDLEWARE = [
+    "middleware.telemetry.MetricsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

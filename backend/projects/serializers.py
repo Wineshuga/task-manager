@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Project, Task
+from telemetry import project_counter
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,7 +14,9 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "description", "created_at"]
 
     def create(self, validated_data):
-        return Project.objects.create(
+        project = Project.objects.create(
             owner=self.context["request"].user,
             **validated_data
         )
+        project_counter.add(1)
+        return project
