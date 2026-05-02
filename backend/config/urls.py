@@ -9,6 +9,7 @@ router = DefaultRouter()
 router.register(r'projects', ProjectViewSet)
 
 urlpatterns = [
+    path('', include('django_prometheus.urls')),
     path('admin/', admin.site.urls),
     path('api/auth/login/', TokenObtainPairView.as_view()),
     path("api/auth/register/", RegisterView.as_view()),
