@@ -130,6 +130,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://dww7f9l5ronpp.cloudfront.net",
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 USE_X_FORWARDED_HOST = True
