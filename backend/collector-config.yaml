@@ -7,13 +7,11 @@ receivers:
         endpoint: 0.0.0.0:4318
 
 exporters:
-  prometheus:
-    endpoint: "0.0.0.0:8889"
-  debug:
-    verbosity: detailed
+  otlp_http:
+    endpoint: http://localhost:9090/api/v1/otlp
 
 service:
   pipelines:
     metrics:
       receivers: [otlp]
-      exporters: [prometheus, debug]
+      exporters: [otlp_http]
