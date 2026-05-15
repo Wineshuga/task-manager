@@ -8,7 +8,7 @@ receivers:
 
 exporters:
   otlp_http:
-    endpoint: http://${PUBLIC_IP}:9090/api/v1/otlp
+    endpoint: http://3.89.63.91:9090/api/v1/otlp
 
 service:
   pipelines:
