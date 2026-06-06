@@ -1,3 +1,10 @@
+extensions:
+  opamp:
+    server:
+      http:
+        endpoint: http://localhost:4321/v1/opamp
+        polling_interval: 5s
+
 receivers:
   otlp:
     protocols:
@@ -11,6 +18,7 @@ exporters:
     endpoint: http://3.89.63.91:9090/api/v1/otlp
 
 service:
+  extensions: [opamp]
   pipelines:
     metrics:
       receivers: [otlp]
