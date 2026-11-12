@@ -1,10 +1,124 @@
 @import "tailwindcss";
 
-* {
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
+/* ---------- Design tokens ---------- */
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand palette */
+  --color-primary: #16a34a;      /* primary green: main actions, highlights */
+  --color-primary-dark: #14532d; /* dark green: headings, text, hover */
+  --color-canvas: #f7f9f5;       /* page background */
+  --color-surface: #ffffff;      /* cards, modals */
+  --color-secondary: #86a789;    /* sage: borders, decorative accents */
+  --color-cream: #f1f5e9;        /* accent cream: soft fills, hovers */
+
+  /* Semantic aliases used across components */
+  --color-ink: var(--color-primary-dark);
+  --color-muted: color-mix(in srgb, #14532d 72%, #f7f9f5);
+  --color-line: color-mix(in srgb, #86a789 35%, #ffffff);
+
+  /* Motion */
+  --animate-fade-up: fade-up 0.7s ease-out both;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 }
 
-h1, h2, h3 {
-  font-family: Georgia, 'Times New Roman', Times, serif;
+/* ---------- Base ---------- */
+@layer base {
+  html,
+  body {
+    @apply bg-canvas text-ink font-sans antialiased;
+  }
+
+  p,
+  label,
+  input,
+  select,
+  button,
+  li,
+  span {
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    @apply text-ink tracking-tight;
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Reusable components ---------- */
+@layer components {
+  .card {
+    @apply bg-surface border border-line rounded-xl;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-ink mb-1.5;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm text-ink
+      placeholder:text-muted/70 outline-none transition
+      focus:border-primary focus:ring-2 focus:ring-primary/15;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium
+      cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-dark;
+  }
+
+  .btn-outline {
+    @apply border border-line bg-surface text-ink hover:bg-cream hover:border-secondary;
+  }
+
+  .btn-danger {
+    @apply bg-red-700 text-white hover:bg-red-700/85;
+  }
+
+  .btn-outline-danger {
+    @apply border border-line bg-surface text-red-700 hover:bg-red-50 hover:border-red-200;
+  }
+
+  .link {
+    @apply font-medium text-primary underline underline-offset-4 decoration-line hover:decoration-primary transition;
+  }
+}

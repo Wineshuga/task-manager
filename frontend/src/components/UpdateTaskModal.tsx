@@ -31,18 +31,18 @@ const UpdateTaskModal = ({
       onClose={() => setShowUpdateTask(false)}
     >
       <form>
-        <div>
-          <label htmlFor="status">Status:</label>
+        <div className="mb-4">
+          <label htmlFor="status" className="label">Status</label>
           <select
             name="status"
             id="status"
-            className="border p-2 text-sm w-full my-2"
+            className="input"
             value={inputValue.status}
             onChange={(e) =>
               setInputValue({ ...inputValue, status: e.target.value })
             }
           >
-            <option value="">select</option>
+            <option value="">Select a status</option>
             <option value="todo">To Do</option>
             <option value="in_progress">In Progress</option>
             <option value="done">Done</option>
@@ -50,11 +50,11 @@ const UpdateTaskModal = ({
         </div>
         <button
           type="button"
-          className="bg-amber-700 p-2 w-40 text-white text-sm cursor-pointer"
+          className="btn btn-primary w-full mt-2"
           onClick={updateTask}
           disabled={btnLoading}
         >
-          Add
+          {btnLoading ? "Updating..." : "Update"}
         </button>
       </form>
     </Modal>

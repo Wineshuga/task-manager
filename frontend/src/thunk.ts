@@ -4,7 +4,7 @@ export const API_URL = import.meta.env.VITE_API_URL;
 
 export const signOut = () => {
   localStorage.clear()
-  window.location.href = "/"
+  window.location.href = "/login"
 }
 
 export interface ProjectPayload {
@@ -33,4 +33,22 @@ export const createProject = async (
   return res.data;
 };
 
+export const deleteTask = async (
+  projectId: string,
+  taskId: string,
+  token: string
+) => {
+  await axios.delete(`${API_URL}/api/projects/${projectId}/tasks/${taskId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
+export const deleteProject = async (projectId: string, token: string) => {
+  await axios.delete(`${API_URL}/api/projects/${projectId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

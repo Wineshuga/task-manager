@@ -1,6 +1,6 @@
 # Frontend - React App
 
-This folder contains the React frontend for the Project & Task Management app.
+This folder contains the React frontend for the Tasky app.
 
 ## Features
 

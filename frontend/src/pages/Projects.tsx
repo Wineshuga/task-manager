@@ -56,50 +56,68 @@ const Projects = () => {
   };
 
   return (
-    <section className="lg:w-1/2 mx-auto md:p-10 p-5 shadow-md">
-      <button
-        type="button"
-        className="border border-amber-700 p-2 sm:w-40 text-sm cursor-pointer"
-        onClick={signOut}
-      >
-        Sign Out
-      </button>
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">My Projects</h1>
-        <button
-          type="button"
-          className="bg-amber-700 p-2 sm:w-40 text-white text-sm cursor-pointer"
-          onClick={() => setShowCreateProject(true)}
-        >
-          Create Project
-        </button>
-      </div>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul className="mt-10">
-          {projects.length === 0 ? (
-            <li className="text-center">You have no projects</li>
-          ) : (
-            projects.map((project, index) => (
-              <li key={index} className="my-2">
-                <button
-                  type="button"
-                  className="w-full text-left cursor-pointer"
-                  onClick={() =>
-                    navigate(`/projects/${project.id}`, { state: project })
-                  }
-                >
-                  <div className="shadow-md p-3">
-                    <h3 className=" font-semibold">{project.title}</h3>
-                    <p className="text-sm">{project.description}</p>
-                  </div>
-                </button>
+    <main className="min-h-screen">
+      <header className="border-b border-line bg-surface">
+        <div className="max-w-3xl mx-auto flex justify-between items-center px-5 py-4">
+          <span className="font-heading font-bold text-lg">
+            Welcome, {user?.username || "User"}!
+          </span>
+          <button type="button" className="btn btn-outline" onClick={signOut}>
+            Sign Out
+          </button>
+        </div>
+      </header>
+
+      <section className="max-w-3xl mx-auto px-5 py-10">
+        <div className="flex flex-wrap gap-4 justify-between items-end">
+          <div>
+            <h1 className="text-3xl font-bold">My Projects</h1>
+            <p className="text-sm text-muted mt-1">
+              Select a project to view and manage its tasks.
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => setShowCreateProject(true)}
+          >
+            + New Project
+          </button>
+        </div>
+
+        {isLoading ? (
+          <p className="text-sm text-muted text-center mt-16">Loading...</p>
+        ) : (
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+            {projects.length === 0 ? (
+              <li className="card sm:col-span-2 p-10 text-center text-sm text-muted">
+                You have no projects yet. Create one to get started.
               </li>
-            ))
-          )}
-        </ul>
-      )}
+            ) : (
+              projects.map((project, index) => (
+                <li key={index}>
+                  <button
+                    type="button"
+                    className="card w-full h-full text-left p-5 cursor-pointer transition hover:border-secondary hover:shadow-md"
+                    onClick={() =>
+                      navigate(`/projects/${project.id}`, { state: project })
+                    }
+                  >
+                    <h3 className="font-semibold text-lg">{project.title}</h3>
+                    <p className="text-sm text-muted mt-1 line-clamp-2">
+                      {project.description}
+                    </p>
+                    <span className="inline-block text-xs font-medium text-primary mt-4">
+                      View tasks →
+                    </span>
+                  </button>
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+      </section>
+
       {showCreateProject && (
         <CreateProjectModal
           showCreateProject={showCreateProject}
@@ -110,7 +128,7 @@ const Projects = () => {
           btnLoading={btnLoading}
         />
       )}
-    </section>
+    </main>
   );
 };
 

@@ -31,39 +31,41 @@ const CreateProjectModal = ({
       onClose={() => setShowCreateProject(false)}
     >
       <form>
-        <div>
-          <label htmlFor="title">Title:</label>
+        <div className="mb-4">
+          <label htmlFor="title" className="label">Title</label>
           <input
-            className="border p-2 text-sm w-full my-2"
+            className="input"
             type="text"
             value={inputValue.title}
             onChange={(e) =>
               setInputValue({ ...inputValue, title: e.target.value })
             }
+            id="title"
             name="title"
             placeholder="Enter project title"
           />
         </div>
-        <div>
-          <label htmlFor="description">Description:</label>
+        <div className="mb-4">
+          <label htmlFor="description" className="label">Description</label>
           <input
-            className="border p-2 text-sm w-full my-2"
+            className="input"
             type="text"
             value={inputValue.description}
             onChange={(e) =>
               setInputValue({ ...inputValue, description: e.target.value })
             }
+            id="description"
             name="description"
             placeholder="Enter description"
           />
         </div>
         <button
           type="button"
-          className="bg-amber-700 p-2 w-40 text-white text-sm cursor-pointer"
+          className="btn btn-primary w-full mt-2"
           onClick={createProject}
           disabled={btnLoading}
         >
-          Create
+          {btnLoading ? "Creating..." : "Create Project"}
         </button>
       </form>
     </Modal>

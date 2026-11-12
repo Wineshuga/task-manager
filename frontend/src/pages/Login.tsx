@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Logo from "../components/Logo";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -43,45 +44,54 @@ const Login = () => {
   };
 
   return (
-    <section className="flex justify-center items-center h-screen">
-      <article className="border sm:px-8 px-4 py-5 mx-3">
-        <h1 className="font-bold text-4xl my-5 text-center">Welcome Back!</h1>
-        <form onSubmit={(e) => handleSubmit(e)} method="post">
-          <div>
-            <label htmlFor="username">Username:</label>
+    <section className="flex justify-center items-center min-h-screen px-4 py-10">
+      <article className="card w-full max-w-sm sm:p-10 p-6 shadow-sm">
+        <div className="flex justify-center mb-6">
+          <Logo />
+        </div>
+        <h1 className="font-bold text-3xl text-center">Welcome Back!</h1>
+        <p className="text-sm text-muted text-center mt-2">
+          Log in to manage your projects and tasks.
+        </p>
+        <form className="mt-8" onSubmit={(e) => handleSubmit(e)} method="post">
+          <div className="mb-4">
+            <label htmlFor="username" className="label">Username</label>
             <input
-              className="border p-2 text-sm w-full my-2"
+              className="input"
               type="text"
               value={inputValue.username}
               onChange={(e) =>
                 setInputValue({ ...inputValue, username: e.target.value })
               }
+              id="username"
               name="username"
               placeholder="Enter username"
             />
           </div>
-          <div>
-            <label htmlFor="password">Password:</label>
+          <div className="mb-4">
+            <label htmlFor="password" className="label">Password</label>
             <input
-              className="border p-2 text-sm w-full my-2"
+              className="input"
               type="password"
               value={inputValue.password}
               onChange={(e) =>
                 setInputValue({ ...inputValue, password: e.target.value })
               }
+              id="password"
               name="password"
               placeholder="Enter password"
             />
           </div>
           <input
             type="submit"
-            className="bg-amber-700 w-full p-2 text-white my-2 text-sm cursor-pointer"
+            className="btn btn-primary w-full mt-2"
+            disabled={isLoading}
             value={isLoading ? "Logging in..." : "Login"}
           />
-          <p className="text-sm">
+          <p className="text-sm text-muted text-center mt-6">
             No account?{" "}
-            <Link to={"signup"} className="underline text-blue-400">
-              Create an account
+            <Link to={"/signup"} className="link">
+              Sign up
             </Link>
           </p>
         </form>

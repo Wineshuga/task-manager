@@ -1,6 +1,6 @@
 # Backend - Django API
 
-This folder contains the Django backend for the Project & Task Management app.
+This folder contains the Django backend for the Tasky app.
 
 ## Features
 

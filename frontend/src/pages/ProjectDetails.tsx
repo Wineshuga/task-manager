@@ -1,10 +1,11 @@
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateTaskModal from "../components/CreateTaskModal";
 import UpdateTaskModal from "../components/UpdateTaskModal";
-import { signOut } from "../thunk";
+import ConfirmModal from "../components/ConfirmModal";
+import { deleteProject, deleteTask, signOut } from "../thunk";
 
 interface Task {
   id: string;
@@ -15,18 +16,33 @@ interface Task {
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const STATUS_LABELS: Record<string, string> = {
+  todo: "To Do",
+  in_progress: "In Progress",
+  done: "Done",
+};
+
+const STATUS_STYLES: Record<string, string> = {
+  todo: "bg-cream text-ink border border-line",
+  in_progress: "bg-secondary/20 text-ink",
+  done: "bg-primary/15 text-primary-dark",
+};
+
 const ProjectDetails = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [btnLoading, setBtnLoading] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [showUpdateTask, setShowUpdateTask] = useState(false);
+  const [showDeleteTask, setShowDeleteTask] = useState(false);
+  const [showDeleteProject, setShowDeleteProject] = useState(false);
   const [taskId, setTaskId] = useState("");
   const [inputValue, setInputValue] = useState({
     title: "",
     status: "",
     due_date: "",
   });
+  const navigate = useNavigate();
   const location = useLocation();
   const project = location.state;
   const storedUser = localStorage.getItem("user");
@@ -75,7 +91,7 @@ const ProjectDetails = () => {
           },
         },
       );
-      toast.success("New project created!");
+      toast.success("Task added!");
       fetchTasks();
       setInputValue({
         title: "",
@@ -112,61 +128,140 @@ const ProjectDetails = () => {
     }
   };
 
+  const handleDeleteTask = async () => {
+    setBtnLoading(true);
+    try {
+      await deleteTask(project.id, taskId, token);
+      toast.success("Task deleted!");
+      setShowDeleteTask(false);
+      setTaskId("");
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't delete task");
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  const handleDeleteProject = async () => {
+    setBtnLoading(true);
+    try {
+      await deleteProject(project.id, token);
+      toast.success("Project deleted!");
+      setShowDeleteProject(false);
+      navigate("/projects");
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't delete project");
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
   return (
-    <section className="lg:w-1/2 mx-auto md:p-10 p-5 shadow-md">
-      <button
-        type="button"
-        className="border border-amber-700 p-2 sm:w-40 text-sm cursor-pointer"
-        onClick={signOut}
-      >
-        Sign Out
-      </button>
+    <main className="min-h-screen">
+      <header className="border-b border-line bg-surface">
+        <div className="max-w-3xl mx-auto flex justify-between items-center px-5 py-4">
+          <Link
+            to="/projects"
+            className="text-sm font-medium text-muted hover:text-ink transition"
+          >
+            ← All projects
+          </Link>
+          <button type="button" className="btn btn-outline" onClick={signOut}>
+            Sign Out
+          </button>
+        </div>
+      </header>
 
-      <h1 className="sm:text-2xl text-xl font-bold">{project.title}</h1>
-      <p className="text-sm">{project.description}</p>
-      <button
-        type="button"
-        className="bg-amber-700 my-2 p-2 sm:w-40 text-white text-sm cursor-pointer"
-        onClick={() => setShowCreateTask(true)}
-      >
-        Add task
-      </button>
+      <section className="max-w-3xl mx-auto px-5 py-10">
+        <div className="flex flex-wrap gap-4 justify-between items-end">
+          <div>
+            <h1 className="text-3xl font-bold">{project.title}</h1>
+            <p className="text-sm text-muted mt-1">{project.description}</p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              className="btn btn-outline-danger"
+              onClick={() => setShowDeleteProject(true)}
+            >
+              Delete Project
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => setShowCreateTask(true)}
+            >
+              + Add Task
+            </button>
+          </div>
+        </div>
 
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : (
-        <ul className="mt-10">
-          {tasks.length === 0 ? (
-            <li className="text-center">You have no tasks</li>
-          ) : (
-            tasks.map((task, index) => (
-              <li
-                key={index}
-                className="my-2 shadow-md p-3 flex justify-between items-center"
-              >
-                <div>
-                  <span>{index + 1}</span>
-                  <h3 className=" font-semibold">{task.title}</h3>
-                  <p className="text-sm">Status: {task.status}</p>
-                  <p className="text-sm">
-                    Due Date: {new Date(task.due_date).toDateString()}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  className="bg-amber-700 my-2 p-2 text-white text-sm cursor-pointer"
-                  onClick={() => {
-                    setShowUpdateTask(true);
-                    setTaskId(task.id);
-                  }}
-                >
-                  Update Status
-                </button>
+        {isLoading ? (
+          <p className="text-sm text-muted text-center mt-16">Loading...</p>
+        ) : (
+          <ul className="mt-8 space-y-3">
+            {tasks.length === 0 ? (
+              <li className="card p-10 text-center text-sm text-muted">
+                You have no tasks yet. Add one to get started.
               </li>
-            ))
-          )}
-        </ul>
-      )}
+            ) : (
+              tasks.map((task, index) => (
+                <li
+                  key={index}
+                  className="card p-5 flex flex-wrap gap-4 justify-between items-center"
+                >
+                  <div className="flex items-start gap-4">
+                    <span className="h-8 w-8 shrink-0 rounded-full bg-cream border border-line flex items-center justify-center text-xs font-medium text-muted">
+                      {index + 1}
+                    </span>
+                    <div>
+                      <h3 className="font-semibold">{task.title}</h3>
+                      <div className="flex flex-wrap items-center gap-3 mt-2">
+                        <span
+                          className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                            STATUS_STYLES[task.status] ?? STATUS_STYLES.todo
+                          }`}
+                        >
+                          {STATUS_LABELS[task.status] ?? task.status}
+                        </span>
+                        <p className="text-xs text-muted">
+                          Due {new Date(task.due_date).toDateString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      className="btn btn-outline"
+                      onClick={() => {
+                        setShowUpdateTask(true);
+                        setTaskId(task.id);
+                      }}
+                    >
+                      Update Status
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-danger"
+                      onClick={() => {
+                        setShowDeleteTask(true);
+                        setTaskId(task.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))
+            )}
+          </ul>
+        )}
+      </section>
+
       {showCreateTask && (
         <CreateTaskModal
           showCreateTask={showCreateTask}
@@ -187,7 +282,30 @@ const ProjectDetails = () => {
           btnLoading={btnLoading}
         />
       )}
-    </section>
+      {showDeleteTask && (
+        <ConfirmModal
+          isOpen={showDeleteTask}
+          title="Delete Task"
+          message="Are you sure you want to delete this task?"
+          onConfirm={handleDeleteTask}
+          onCancel={() => {
+            setShowDeleteTask(false);
+            setTaskId("");
+          }}
+          btnLoading={btnLoading}
+        />
+      )}
+      {showDeleteProject && (
+        <ConfirmModal
+          isOpen={showDeleteProject}
+          title="Delete Project"
+          message="This will delete all tasks for this project. Do you want to proceed?"
+          onConfirm={handleDeleteProject}
+          onCancel={() => setShowDeleteProject(false)}
+          btnLoading={btnLoading}
+        />
+      )}
+    </main>
   );
 };
 
