@@ -14,7 +14,14 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:id" element={<ProjectDetails />} />
-        <Route path="*" element={<div>404 Not Found</div>} />
+        <Route
+          path="*"
+          element={
+            <div className="min-h-screen flex items-center justify-center">
+              <h1 className="text-2xl font-bold">404 — Page not found</h1>
+            </div>
+          }
+        />
       </Routes>
       <ToastContainer
         position="top-right"
