@@ -33,4 +33,22 @@ export const createProject = async (
   return res.data;
 };
 
+export const deleteTask = async (
+  projectId: string,
+  taskId: string,
+  token: string
+) => {
+  await axios.delete(`${API_URL}/api/projects/${projectId}/tasks/${taskId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
+export const deleteProject = async (projectId: string, token: string) => {
+  await axios.delete(`${API_URL}/api/projects/${projectId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

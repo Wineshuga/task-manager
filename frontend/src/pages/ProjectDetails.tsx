@@ -1,10 +1,11 @@
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateTaskModal from "../components/CreateTaskModal";
 import UpdateTaskModal from "../components/UpdateTaskModal";
-import { signOut } from "../thunk";
+import ConfirmModal from "../components/ConfirmModal";
+import { deleteProject, deleteTask, signOut } from "../thunk";
 
 interface Task {
   id: string;
@@ -33,12 +34,15 @@ const ProjectDetails = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [showUpdateTask, setShowUpdateTask] = useState(false);
+  const [showDeleteTask, setShowDeleteTask] = useState(false);
+  const [showDeleteProject, setShowDeleteProject] = useState(false);
   const [taskId, setTaskId] = useState("");
   const [inputValue, setInputValue] = useState({
     title: "",
     status: "",
     due_date: "",
   });
+  const navigate = useNavigate();
   const location = useLocation();
   const project = location.state;
   const storedUser = localStorage.getItem("user");
@@ -124,6 +128,37 @@ const ProjectDetails = () => {
     }
   };
 
+  const handleDeleteTask = async () => {
+    setBtnLoading(true);
+    try {
+      await deleteTask(project.id, taskId, token);
+      toast.success("Task deleted!");
+      setShowDeleteTask(false);
+      setTaskId("");
+      fetchTasks();
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't delete task");
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  const handleDeleteProject = async () => {
+    setBtnLoading(true);
+    try {
+      await deleteProject(project.id, token);
+      toast.success("Project deleted!");
+      setShowDeleteProject(false);
+      navigate("/projects");
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't delete project");
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
   return (
     <main className="min-h-screen">
       <header className="border-b border-line bg-surface">
@@ -146,13 +181,22 @@ const ProjectDetails = () => {
             <h1 className="text-3xl font-bold">{project.title}</h1>
             <p className="text-sm text-muted mt-1">{project.description}</p>
           </div>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => setShowCreateTask(true)}
-          >
-            + Add Task
-          </button>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              className="btn btn-outline-danger"
+              onClick={() => setShowDeleteProject(true)}
+            >
+              Delete Project
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => setShowCreateTask(true)}
+            >
+              + Add Task
+            </button>
+          </div>
         </div>
 
         {isLoading ? (
@@ -189,16 +233,28 @@ const ProjectDetails = () => {
                       </div>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    className="btn btn-outline"
-                    onClick={() => {
-                      setShowUpdateTask(true);
-                      setTaskId(task.id);
-                    }}
-                  >
-                    Update Status
-                  </button>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      className="btn btn-outline"
+                      onClick={() => {
+                        setShowUpdateTask(true);
+                        setTaskId(task.id);
+                      }}
+                    >
+                      Update Status
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-danger"
+                      onClick={() => {
+                        setShowDeleteTask(true);
+                        setTaskId(task.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </li>
               ))
             )}
@@ -223,6 +279,29 @@ const ProjectDetails = () => {
           inputValue={inputValue}
           setInputValue={setInputValue}
           updateTask={updateTask}
+          btnLoading={btnLoading}
+        />
+      )}
+      {showDeleteTask && (
+        <ConfirmModal
+          isOpen={showDeleteTask}
+          title="Delete Task"
+          message="Are you sure you want to delete this task?"
+          onConfirm={handleDeleteTask}
+          onCancel={() => {
+            setShowDeleteTask(false);
+            setTaskId("");
+          }}
+          btnLoading={btnLoading}
+        />
+      )}
+      {showDeleteProject && (
+        <ConfirmModal
+          isOpen={showDeleteProject}
+          title="Delete Project"
+          message="This will delete all tasks for this project. Do you want to proceed?"
+          onConfirm={handleDeleteProject}
+          onCancel={() => setShowDeleteProject(false)}
           btnLoading={btnLoading}
         />
       )}

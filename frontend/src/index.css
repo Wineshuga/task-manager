@@ -69,6 +69,14 @@
     @apply border border-line bg-surface text-ink hover:bg-canvas;
   }
 
+  .btn-danger {
+    @apply bg-red-700 text-white hover:bg-red-700/85;
+  }
+
+  .btn-outline-danger {
+    @apply border border-line bg-surface text-red-700 hover:bg-red-50 hover:border-red-200;
+  }
+
   .link {
     @apply font-medium text-ink underline underline-offset-4 decoration-line hover:decoration-ink transition;
   }
