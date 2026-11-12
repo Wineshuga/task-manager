@@ -23,9 +23,9 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const STATUS_STYLES: Record<string, string> = {
-  todo: "bg-gray-100 text-gray-700",
-  in_progress: "bg-amber-50 text-amber-800",
-  done: "bg-emerald-50 text-emerald-800",
+  todo: "bg-cream text-ink border border-line",
+  in_progress: "bg-secondary/20 text-ink",
+  done: "bg-primary/15 text-primary-dark",
 };
 
 const ProjectDetails = () => {
@@ -91,7 +91,7 @@ const ProjectDetails = () => {
           },
         },
       );
-      toast.success("New project created!");
+      toast.success("Task added!");
       fetchTasks();
       setInputValue({
         title: "",
@@ -214,7 +214,7 @@ const ProjectDetails = () => {
                   className="card p-5 flex flex-wrap gap-4 justify-between items-center"
                 >
                   <div className="flex items-start gap-4">
-                    <span className="h-8 w-8 shrink-0 rounded-full bg-canvas border border-line flex items-center justify-center text-xs font-medium text-muted">
+                    <span className="h-8 w-8 shrink-0 rounded-full bg-cream border border-line flex items-center justify-center text-xs font-medium text-muted">
                       {index + 1}
                     </span>
                     <div>

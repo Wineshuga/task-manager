@@ -4,7 +4,7 @@ export const API_URL = import.meta.env.VITE_API_URL;
 
 export const signOut = () => {
   localStorage.clear()
-  window.location.href = "/"
+  window.location.href = "/login"
 }
 
 export interface ProjectPayload {

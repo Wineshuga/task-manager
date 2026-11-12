@@ -5,11 +5,43 @@
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --font-heading: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink: #1f2933;        /* primary text + primary buttons */
-  --color-muted: #6b7280;      /* secondary text */
-  --color-line: #e5e7eb;       /* borders */
-  --color-canvas: #f7f7f5;     /* page background */
-  --color-surface: #ffffff;    /* cards, modals */
+  /* Brand palette */
+  --color-primary: #16a34a;      /* primary green: main actions, highlights */
+  --color-primary-dark: #14532d; /* dark green: headings, text, hover */
+  --color-canvas: #f7f9f5;       /* page background */
+  --color-surface: #ffffff;      /* cards, modals */
+  --color-secondary: #86a789;    /* sage: borders, decorative accents */
+  --color-cream: #f1f5e9;        /* accent cream: soft fills, hovers */
+
+  /* Semantic aliases used across components */
+  --color-ink: var(--color-primary-dark);
+  --color-muted: color-mix(in srgb, #14532d 72%, #f7f9f5);
+  --color-line: color-mix(in srgb, #86a789 35%, #ffffff);
+
+  /* Motion */
+  --animate-fade-up: fade-up 0.7s ease-out both;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 }
 
 /* ---------- Base ---------- */
@@ -40,6 +72,15 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 /* ---------- Reusable components ---------- */
 @layer components {
   .card {
@@ -53,7 +94,7 @@
   .input {
     @apply w-full rounded-lg border border-line bg-surface px-3.5 py-2.5 text-sm text-ink
       placeholder:text-muted/70 outline-none transition
-      focus:border-ink focus:ring-2 focus:ring-ink/10;
+      focus:border-primary focus:ring-2 focus:ring-primary/15;
   }
 
   .btn {
@@ -62,11 +103,11 @@
   }
 
   .btn-primary {
-    @apply bg-ink text-white hover:bg-ink/85;
+    @apply bg-primary text-white hover:bg-primary-dark;
   }
 
   .btn-outline {
-    @apply border border-line bg-surface text-ink hover:bg-canvas;
+    @apply border border-line bg-surface text-ink hover:bg-cream hover:border-secondary;
   }
 
   .btn-danger {
@@ -78,6 +119,6 @@
   }
 
   .link {
-    @apply font-medium text-ink underline underline-offset-4 decoration-line hover:decoration-ink transition;
+    @apply font-medium text-primary underline underline-offset-4 decoration-line hover:decoration-primary transition;
   }
 }

@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Logo from "../components/Logo";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -45,6 +46,9 @@ const Login = () => {
   return (
     <section className="flex justify-center items-center min-h-screen px-4 py-10">
       <article className="card w-full max-w-sm sm:p-10 p-6 shadow-sm">
+        <div className="flex justify-center mb-6">
+          <Logo />
+        </div>
         <h1 className="font-bold text-3xl text-center">Welcome Back!</h1>
         <p className="text-sm text-muted text-center mt-2">
           Log in to manage your projects and tasks.
@@ -86,7 +90,7 @@ const Login = () => {
           />
           <p className="text-sm text-muted text-center mt-6">
             No account?{" "}
-            <Link to={"signup"} className="link">
+            <Link to={"/signup"} className="link">
               Sign up
             </Link>
           </p>

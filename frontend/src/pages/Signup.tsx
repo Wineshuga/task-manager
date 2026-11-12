@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Logo from "../components/Logo";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -26,7 +27,7 @@ const Signup = () => {
       await axios.post(`${API_URL}/api/auth/register/`, payload);
       toast.success("Account created!");
       setInputValue({ username: "", email: "", password: "" });
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong!");
@@ -37,6 +38,9 @@ const Signup = () => {
   return (
     <section className="flex justify-center items-center min-h-screen px-4 py-10">
       <article className="card w-full max-w-sm sm:p-10 p-6 shadow-sm">
+        <div className="flex justify-center mb-6">
+          <Logo />
+        </div>
         <h1 className="font-bold text-3xl text-center">
           Create an Account
         </h1>
@@ -94,7 +98,7 @@ const Signup = () => {
           />
           <p className="text-sm text-muted text-center mt-6">
             Have an account?{" "}
-            <Link to={"/"} className="link">
+            <Link to={"/login"} className="link">
               Log in
             </Link>
           </p>

@@ -98,7 +98,7 @@ const Projects = () => {
                 <li key={index}>
                   <button
                     type="button"
-                    className="card w-full h-full text-left p-5 cursor-pointer transition hover:border-ink/40 hover:shadow-md"
+                    className="card w-full h-full text-left p-5 cursor-pointer transition hover:border-secondary hover:shadow-md"
                     onClick={() =>
                       navigate(`/projects/${project.id}`, { state: project })
                     }
@@ -107,7 +107,7 @@ const Projects = () => {
                     <p className="text-sm text-muted mt-1 line-clamp-2">
                       {project.description}
                     </p>
-                    <span className="inline-block text-xs font-medium text-ink mt-4">
+                    <span className="inline-block text-xs font-medium text-primary mt-4">
                       View tasks →
                     </span>
                   </button>
