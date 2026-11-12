@@ -59,7 +59,9 @@ const Projects = () => {
     <main className="min-h-screen">
       <header className="border-b border-line bg-surface">
         <div className="max-w-3xl mx-auto flex justify-between items-center px-5 py-4">
-          <span className="font-heading font-bold text-lg">Project &amp; Task</span>
+          <span className="font-heading font-bold text-lg">
+            Welcome, {user?.username || "User"}!
+          </span>
           <button type="button" className="btn btn-outline" onClick={signOut}>
             Sign Out
           </button>
